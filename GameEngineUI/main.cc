@@ -64,6 +64,12 @@ class GameEngine : public Application::Listener {
 	  method_dispatcher_.BindWithRetval(app_object,
         WSLit("copyStaticFiles"),
         JSDelegateWithRetval(this, &GameEngine::copyStaticFiles));
+	  method_dispatcher_.BindWithRetval(app_object,
+        WSLit("readJSON"),
+        JSDelegateWithRetval(this, &GameEngine::readJSON));
+	  method_dispatcher_.BindWithRetval(app_object,
+        WSLit("writeJSON"),
+        JSDelegateWithRetval(this, &GameEngine::writeJSON));
     }
 
     // Bind our method dispatcher to the WebView
@@ -82,6 +88,20 @@ class GameEngine : public Application::Listener {
 	// make src as const as same for all
 	// make dest as relative to the workspace set at teh first time
     return JSValue(FileManager::Instance()->copyFolder(src, dest));
+  }
+
+  JSValue readJSON(WebView* caller,
+                  const JSArray& args) {
+	char *jsonStr;
+	
+    return JSValue(jsonStr);
+  }
+
+  JSValue writeJSON(WebView* caller,
+                  const JSArray& args) {
+	char *jsonStr;
+	
+    return JSValue();
   }
 };
 
