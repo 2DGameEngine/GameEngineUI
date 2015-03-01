@@ -7,20 +7,22 @@
 #include <Windows.h>
 #endif
 
+#include "FileManager.h"
+
 using namespace Awesomium;
 
-class TutorialApp : public Application::Listener {
+class GameEngine : public Application::Listener {
   Application* app_;
   View* view_;
   MethodDispatcher method_dispatcher_;
  public:
-  TutorialApp() 
+  GameEngine() 
     : app_(Application::Create()),
       view_(0) {
     app_->set_listener(this);
   }
 
-  virtual ~TutorialApp() {
+  virtual ~GameEngine() {
     if (view_)
       app_->DestroyView(view_);
     if (app_)
@@ -52,23 +54,34 @@ class TutorialApp : public Application::Listener {
 
   void BindMethods(WebView* web_view) {
     // Create a global js object named 'app'
-    JSValue result = web_view->CreateGlobalJavascriptObject(WSLit("app"));
+    JSValue result = web_view->CreateGlobalJavascriptObject(WSLit("Game"));
     if (result.IsObject()) {
       // Bind our custom method to it.
       JSObject& app_object = result.ToObject();
       method_dispatcher_.Bind(app_object,
         WSLit("sayHello"),
-        JSDelegate(this, &TutorialApp::OnSayHello));
+        JSDelegate(this, &GameEngine::OnSayHello));
+	  method_dispatcher_.BindWithRetval(app_object,
+        WSLit("copyStaticFiles"),
+        JSDelegateWithRetval(this, &GameEngine::copyStaticFiles));
     }
 
     // Bind our method dispatcher to the WebView
     web_view->set_js_method_handler(&method_dispatcher_);
   }
 
-  // Bound to app.sayHello() in JavaScript
+  // Bound to Game.sayHello() in JavaScript
   void OnSayHello(WebView* caller,
                   const JSArray& args) {
     app_->ShowMessage("Hello!");
+  }
+
+  JSValue copyStaticFiles(WebView* caller,
+                  const JSArray& args) {
+	const char *src, *dest;
+	// make src as const as same for all
+	// make dest as relative to the workspace set at teh first time
+    return JSValue(FileManager::Instance()->copyFolder(src, dest));
   }
 };
 
@@ -79,7 +92,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE, wchar_t*,
 int main() {
 #endif
 
-  TutorialApp app;
+  GameEngine app;
   app.Run();
 
   return 0;

@@ -1,5 +1,5 @@
-#ifndef TUTORIAL_APPLICATION_H_
-#define TUTORIAL_APPLICATION_H_
+#ifndef _APPLICATION_H_
+#define _APPLICATION_H_
 
 class View;
 
@@ -64,4 +64,4 @@ class Application {
   Awesomium::WebCore* web_core_;
 };
 
-#endif  // TUTORIAL_APPLICATION_H_
+#endif  // _APPLICATION_H_

@@ -166,8 +166,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
   case WM_TIMER:
     break;
   case WM_SIZE:
-	  if(view)
+	  if(view){
 		view->web_view()->Resize(LOWORD(lParam), HIWORD(lParam));
+	  }
     break;
   case WM_DESTROY:
     PostQuitMessage(0);

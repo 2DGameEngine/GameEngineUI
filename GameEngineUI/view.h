@@ -1,5 +1,5 @@
-#ifndef TUTORIAL_VIEW_H_
-#define TUTORIAL_VIEW_H_
+#ifndef _VIEW_H_
+#define _VIEW_H_
 
 namespace Awesomium {
 class WebView;
@@ -23,4 +23,4 @@ class View {
   Awesomium::WebView* web_view_;
 };
 
-#endif  // TUTORIAL_VIEW_H_
+#endif  // _VIEW_H_

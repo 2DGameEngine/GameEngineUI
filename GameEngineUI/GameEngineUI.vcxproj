@@ -12,12 +12,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
+    <ClInclude Include="dirent.h" />
+    <ClInclude Include="FileManager.h" />
     <ClInclude Include="js_delegate.h" />
     <ClInclude Include="method_dispatcher.h" />
     <ClInclude Include="view.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="application_win.cc" />
+    <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="main.cc" />
     <ClCompile Include="view_win.cc" />
   </ItemGroup>
