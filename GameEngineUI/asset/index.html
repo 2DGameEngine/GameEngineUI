@@ -30,6 +30,7 @@
    		padding:4px 0 12px 8px;
    		/*width:209px;*/
    		border:1px solid #ddd;
+   		font-family:"Lucida Grande","bitstream vera sans","trebuchet ms",sans-serif,verdana;
    	}
 
    	/* accordion header */
@@ -78,16 +79,10 @@
    	:focus {
    	  -moz-outline-style:none;
    	}
+   	.invisible{
 
+   	}
    </style>
-  <script type="text/javascript">
-
-      // $(document).ready(function() {
-          
-
-      // });
-
-  </script>
 </head>
 <body style='-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;' unselectable='on' onselectstart='return false;'>
 
@@ -144,7 +139,7 @@
 				<div class="accordion" id="accordion">
 				    <!-- 1st header and pane -->
 				    <div><img class="opn_tab-1" src="images/properties.png" width="17" alt="PROPERTIES">
-				    <div style="display:block;width: 100px;">PROPERTIES&nbsp;&nbsp;</div></div>
+				    <div style="display: block;width: 85px;">PROPERTIES&nbsp;&nbsp;</div></div>
 
 				    <!-- 2nd header and pane -->
 				    <div><img class="opn_tab-2" src="images/images.png" width="17" alt="IMAGES">
@@ -300,7 +295,7 @@
 			qwe = $(this).siblings('div');
 			if (qwe.hasClass('invisible')) {
 				$('.accordion>div>div').not(qwe).addClass('invisible').css("display", "none");
-				qwe.removeClass('invisible').css({width: '0px', display: 'block'}).animate({width: '100px'}, 'medium');
+				qwe.removeClass('invisible').css({width: '0px', display: 'block'}).animate({width: '85px'}, 'medium');
 
 				// To open Tab
 				var tab = $(this).attr("class").split(" ")[0];
