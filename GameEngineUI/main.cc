@@ -15,11 +15,15 @@ class GameEngine : public Application::Listener {
   Application* app_;
   View* view_;
   MethodDispatcher method_dispatcher_;
+  std::string workspace, prName, srcPath;
  public:
   GameEngine() 
     : app_(Application::Create()),
       view_(0) {
     app_->set_listener(this);
+	workspace = "C\:\\Users\\akc\\Documents\\Visual\ Studio\ 2010\\Projects\\GameEngineUI\\Games\\";
+	prName = "";
+	srcPath = "C\:\\Users\\akc\\Documents\\Visual\ Studio\ 2010\\Projects\\GameEngineUI\\game_backend";
   }
 
   virtual ~GameEngine() {
@@ -62,14 +66,17 @@ class GameEngine : public Application::Listener {
         WSLit("sayHello"),
         JSDelegate(this, &GameEngine::OnSayHello));
 	  method_dispatcher_.BindWithRetval(app_object,
-        WSLit("copyStaticFiles"),
-        JSDelegateWithRetval(this, &GameEngine::copyStaticFiles));
-	  method_dispatcher_.BindWithRetval(app_object,
         WSLit("readJSON"),
         JSDelegateWithRetval(this, &GameEngine::readJSON));
 	  method_dispatcher_.BindWithRetval(app_object,
         WSLit("writeJSON"),
         JSDelegateWithRetval(this, &GameEngine::writeJSON));
+	  method_dispatcher_.BindWithRetval(app_object,
+        WSLit("setNewGame"),
+        JSDelegateWithRetval(this, &GameEngine::setNewGame));
+	  method_dispatcher_.BindWithRetval(app_object,
+        WSLit("gamePresent"),
+        JSDelegateWithRetval(this, &GameEngine::gamePresent));
     }
 
     // Bind our method dispatcher to the WebView
@@ -79,30 +86,53 @@ class GameEngine : public Application::Listener {
   // Bound to Game.sayHello() in JavaScript
   void OnSayHello(WebView* caller,
                   const JSArray& args) {
-    app_->ShowMessage("Hello!");
-  }
-
-  JSValue copyStaticFiles(WebView* caller,
-                  const JSArray& args) {
-	const char *src, *dest;
-	// make src as const as same for all
-	// make dest as relative to the workspace set at teh first time
-    return JSValue(FileManager::Instance()->copyFolder(src, dest));
+	std::string str = ToString(args[0].ToString());
+	app_->ShowMessage(str.c_str());
   }
 
   JSValue readJSON(WebView* caller,
                   const JSArray& args) {
-	char *jsonStr;
-	
-    return JSValue(jsonStr);
+	std::string filename = workspace;
+	filename += prName;
+	filename += "\\json\\";
+	filename += ToString(args[0].ToString());
+	std::cout<<"Reading "<<filename<<"\n";
+	return JSValue(FileManager::Instance()->readJSON(filename.c_str()));
   }
 
   JSValue writeJSON(WebView* caller,
                   const JSArray& args) {
-	char *jsonStr;
-	
-    return JSValue();
+	std::string filename = workspace;
+	filename += prName;
+	filename += "\\json\\";
+	filename += ToString(args[0].ToString());
+	std::cout<<"Reading "<<filename<<"\n";
+	std::string jsonStr = ToString(args[1].ToString());
+	return JSValue(FileManager::Instance()->writeJSON(filename.c_str(), jsonStr.c_str()));
   }
+
+  JSValue setNewGame(WebView* caller,
+                  const JSArray& args) {
+	std::string gameName = workspace;
+	gameName += ToString(args[0].ToString());
+	std::string jsonStr = ToString(args[1].ToString());
+	if(FileManager::Instance()->copyFolder(srcPath.c_str(), gameName.c_str()) && FileManager::Instance()->renameGame(gameName.c_str(), "game_backend",ToString(args[0].ToString()).c_str())){
+		gameName += "\\Game.json";
+		std::cout<<"GameName = "<<gameName<<"\n";
+		prName = ToString(args[0].ToString());
+		return JSValue(FileManager::Instance()->writeJSON(gameName.c_str(), jsonStr.c_str()));
+	}
+	FileManager::Instance()->removeDir(gameName.c_str());
+	return JSValue(false);
+  }
+
+  JSValue gamePresent(WebView* caller,
+                  const JSArray& args) {
+	std::string gameName = ToString(args[0].ToString());
+	std::string source = workspace;
+	return JSValue(FileManager::Instance()->checkGame(source.c_str(), gameName.c_str()));
+  }
+
 };
 
 #ifdef _WIN32
@@ -111,7 +141,8 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE, wchar_t*,
 #else
 int main() {
 #endif
-
+  AllocConsole();
+  freopen("CON","w",stdout);
   GameEngine app;
   app.Run();
 

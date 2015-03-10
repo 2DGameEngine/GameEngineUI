@@ -82,18 +82,45 @@
 	:focus {
 	  -moz-outline-style:none;
 	}
+	.obj div{
+		cursor: pointer;
+	}
+	.objSelected{
+		background: #E0FFF9;
+	}
+	.varList tr, .eventList tr{
+		width: 100%;
+	}
+	.varList tr td, .eventList tr td{
+		width: 40%;
+	}
+	.varList tr td:last-child, .eventList tr td:last-child{
+		width: 10%;
+	}
+	.varList tr td input, .eventList tr td input{
+		width: 100%;
+	}
+	.loader {
+		position: fixed;
+		left: 0px;
+		top: 0px;
+		width: 100%;
+		height: 100%;
+		z-index: 9999;
+		background: url('images/page-loader.gif') 50% 50% no-repeat rgb(249,249,249);
+	}
    </style>
 </head>
 <body style='-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;' unselectable='on' onselectstart='return false;'>
-
+<div class="loader"></div>
 <div id='cssmenu'>
 <ul>
    <li><a href='#'>Game Engine</a></li>
    <li class='has-sub'><a href='#'>File</a>
 	  <ul style="z-index:99;">
-			<li><a href="#">New Game</a></li>
+			<li><a href="#" onclick="return newGame()">New Game</a></li>
 			<li><a href="#">Open Existing Game</a></li>
-			<li><a href="#">Something else here</a></li>
+			<li><a href="#" onclick="return saveProject()">Save</a></li>
 			<li><a href="#">Separated link</a></li>
 			<li><a href="#">Exit</a></li>
 		</ul>
@@ -123,6 +150,9 @@
    <li><a href='#'>Help</a></li>
 </ul>
 </div>
+<div class="dialogOuter" style="width:100%;height:100%;opacity:0.5;background:black;z-index:200;display:none;position:absolute;top:0px;left:0px;">
+	<div class="dialogInner" style="padding:15px;z-index:201;margin:auto;text-align:center;background:gainsboro;border-radius:10px;"></div>
+</div>
 <div class="fullUI" style="width:100%;background:#BDC3C7;">
 	<div class="bodyUI" style="height:100%;width:100%;">
 		<div class="objectList" style="height:100%;width:15%;float:left;padding-top:0.6%;">
@@ -130,7 +160,7 @@
 		</div>
 		<div class="drawUI" style="height:100%;width:63%;float:left;padding-top:0.6%;">
 			<div class="drawPanel" style="background:white;height:96%;width:98%;margin:auto;overflow:scroll;">
-				<div class="drawPane" style="border:1px solid;margin:auto;position:relative;">
+				<div class="drawPane" style="border:1px solid;margin:auto;position:relative;display:none;">
 				</div>
 			</div>
 		</div>
@@ -154,47 +184,53 @@
 					<div style="" class="ainvisible">AUDIO</div></div>
 
 				</div>
-				<div class="tab">
+				<form id="propertiedForm" class="tab" action="">
 					<div class="tab-1 tab-content">
 						<table style="width:100%">
 						  <tr>
 							<td>Name : </td>
-							<td> <input type="text" name="Name"> </td>
+							<td> <input type="text" class="Name"> </td>
 						  </tr>
 						  <tr>
 							<td>Height : </td>
-							<td> <input type="number" name="Height"> </td>
+							<td> <input type="number" class="Height"> </td>
 						  </tr>
 						  <tr>
 							<td>Width : </td>
-							<td> <input type="number" name="Width"> </td>
+							<td> <input type="number" class="Width"> </td>
 						  </tr>
 						  <tr>
 							<td>Collidable : </td>
-							<td>  <input type="checkbox" name="Collidable" value="Collidable"> </td>
+							<td>  <input type="checkbox" class="Collidable" value="Collidable"> </td>
 						  </tr>
 						  <tr>
 							<td>Rigid : </td>
-							<td> <input type="checkbox" name="Rigid" value="Rigid"> </td>
+							<td> <input type="checkbox" class="Rigid" value="Rigid"> </td>
 						  </tr>
 						</table>
 					</div>
 					<div class="tab-2 tab-content" style="display: none;">
-						<form action=" ">
-						  Upload an Image : <input type="file" name="img">
-						</form>
+						<table style="width:100%">
+							<tr>
+								<td>Upload an Image :<input type="file" class="img"></td>
+							</tr>
+						</table>
 					</div>
 					<div class="tab-3 tab-content" style="display:none;">
-						<form action="demo_form.asp">
-						  Upload an Animation file : <input type="file" name="img">
-						</form>
+						<table style="width:100%">
+							<tr>
+								<td>Upload an Animation file :<input type="file" class="anim"></td>
+							</tr>
+						</table>
 					</div>
 					<div class="tab-4 tab-content" style="display:none;">
-						<form action="demo_form.asp">
-						  Upload an audio file : <input type="file" name="img">
-						</form>
+						<table style="width:100%">
+							<tr>
+								<td>Upload an audio file :<input type="file" class="audio"></td>
+							</tr>
+						</table>
 					</div>
-				</div>
+				</form>
 			</div>
 			<div class="vareventList" style="background:white;height:47%;width:96%;margin:auto;overflow:scroll;position:relative;">
 				<div class="accordion">
@@ -207,33 +243,33 @@
 					<div style="" class="ainvisible">ACTIONS</div></div>
 
 				</div>
-				<div class="tab">
-					<div class="tab-1 tab-content">
-						<table style="width:100%" class="varList">
-							<tbody></tbody>
-						</table>
-						<input type="button" onclick="addRow($(this))" value="Add New Variable">
+				<form id="varEventForm" class="tab" action="">
+					<div class="tab-1 tab-content varListT">
+						<table style="width:100%" class="varList"></table>
+						<input type="button" onclick="addRow($(this))" class="varListB" value="Add New Variable">
 					</div>
-					<div class="tab-2 tab-content" style="display: none;">
-						<table style="width:100%" class="eventList">
-							<tbody></tbody>
-						</table>
-						<input type="button" onclick="addRow($(this))" value="Add New Event">
+					<div class="tab-2 tab-content eventListT" style="display: none;">
+						<table style="width:100%" class="eventList"></table>
+						<input type="button" onclick="addRow($(this))" class="eventListB" value="Add New Event">
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
 	</div>
 </div>
 <script type="text/javascript">
-	var fullUI = $(".fullUI"), drawPanel = $(".drawPanel"), settingsPanel = $(".settingsPanel"), properties = $(".properties"), vareventList = $(".vareventList"), drawPane = $(".drawPane"), ObjList = $(".ObjList"), objno = 1;
+	var fullUI = $(".fullUI"), drawPanel = $(".drawPanel"), settingsPanel = $(".settingsPanel"), properties = $(".properties"), vareventList = $(".vareventList"), drawPane = $(".drawPane"), ObjList = $(".ObjList"), propertiedForm = $("#propertiedForm"), varListT = $(".varListT"), eventListT = $(".eventListT"), tab = $(".tab"), eventListB = $(".eventListB"), varListB = $(".varListB"), dialogOuter = $(".dialogOuter"), dialogInner = $(".dialogInner"), objno = 1, currObj='', gameName = '', newGameWidth = 0, newGameHeight = 0, objectsArr=[], changed = false;
+
+
 
 	function deleteRow (ele) {
 		ele.parent().parent().remove();
 	}
 
-	function addRow (ele) {
-		ele.siblings('table').children('tbody').html('<tr><td><input type="text" name="name" placeholder="Name"></td><td><input type="text" name="value" placeholder="Value"><input type="button" value="X" onclick="deleteRow($(this))"></td></tr>')
+	function addRow (ele, name, value) {
+		if (typeof(name)==='undefined') name = '';
+		if (typeof(value)==='undefined') value = '';
+		ele.siblings('table').html('<tr><td><input type="text" name="name" placeholder="Name" value="'+name+'"></td><td><input type="text" name="value" placeholder="Value" value="'+value+'"></td><td><input type="button" value="X" onclick="deleteRow($(this))"></td></tr>')
 	}
 
 	function getClassArg (ele) {
@@ -246,59 +282,258 @@
 		return 0;
 	}
 
+	function refreshSettings (Ob) {
+		if(Ob)
+			ObjList.html('');
+		propertiedForm[0].reset();
+		varListT.find(">.varList").remove();
+		varListT.html('<table style="width:100%" class="varList"></table><input type="button" onclick="addRow($(this))" value="Add New Variable">');
+		eventListT.find(">.eventList").remove();
+		eventListT.html('<table style="width:100%" class="eventList"></table><input type="button" onclick="addRow($(this))" value="Add New Event">');
+	}	
+
+	function refillSettings (ob) {
+		$.each(ob, function(index, element) {
+			if (index.indexOf("var_")>=0) {
+				addRow(varListB, index, element);
+			}
+			else if (index.indexOf("event_")>=0) {
+				addRow(eventListB, index, element);
+			}
+			else{
+				tab.find('.'+index).val(element);
+			}
+		});
+	}
+
+	function objClicked (currobj, ele) {
+		if (currobj === currObj) {
+			return;
+		}
+		currObj = currobj;
+		if (typeof(ele)==='undefined')
+			ele = $("#Bobj_" + currObj);
+		$(".objSelected").removeClass('objSelected');
+		ele.children('div').addClass("objSelected");
+		$(".loader").fadeIn("fast", function(){
+			var ob = Game.readJSON(currObj+".json");
+			refreshSettings(false);
+			refillSettings(ob);
+			$(".loader").fadeOut("fast");
+		});
+	}
+
+	function createNewGame () {
+		$(".loader").fadeIn("fast" , function() {
+			newGameWidth = parseInt(dialogInner.find('.newGameWidth').val());
+			newGameHeight = parseInt(dialogInner.find('.newGameHeight').val());
+			gameName = dialogInner.find('.newGameName').val();
+			if(Game.gamePresent(gameName)){
+				$(".loader").fadeOut("fast", function(){
+					dialogInner.find('.newGameError').html("Enter another name");
+					return;
+				});
+			}
+			else if(newGameWidth!=NaN && newGameHeight!=NaN && newGameWidth>0 && newGameHeight>0 && gameName!=""){
+				ob = {"Name": gameName, "Width": newGameWidth, "Height": newGameHeight};
+				if(Game.setNewGame(gameName, JSON.stringify(ob))){
+					refreshSettings(true);
+					drawPane.height(newGameHeight);
+					drawPane.width(newGameWidth);
+					ht = ((drawPanel.innerHeight()-drawPane.outerHeight())/2)-4;
+					drawPane.css('top', (ht>=0)?ht:0);
+					drawPane.css('display', 'block');
+					dialogOuter.fadeOut('400');
+					dialogInner.html('');
+					$(".loader").fadeOut("fast");
+					return;
+				}
+				else{
+					$(".loader").fadeOut("fast", function(){
+						dialogInner.find('.newGameError').html("Couldnt create");
+						return;
+					});
+				}
+			}
+			else{
+				$(".loader").fadeOut("fast", function(){
+					dialogInner.find('.newGameError').html("Enter valid inputs");
+					return;
+				});
+			}
+			$(".loader").fadeOut("fast");
+		});
+	}
+
 	function newGame () {
-		val = prompt("Enter Width", "800");
-		if (val == null) {
-		   val = 800;
-		}
-		val1 = prompt("Enter Height", "500");
-		if (val1 == null) {
-		   val1 = 500;
-		}
-		drawPane.height(val1);
-		drawPane.width(val);
-		ht = ((drawPanel.innerHeight()-drawPane.outerHeight())/2)-4;
-		drawPane.css('top', (ht>=0)?ht:0);
+		// val = 800;
+		// val1 = 500;
+		openDialogBox([
+				['Error', 'div', 'style="color:red;"'],
+				['Name', 'text'],
+				['Width', 'number'],
+				['Height', 'number'],
+				['createNewGame()', 'button', 'Create New Game']
+			], 'newGame');
+		return false;
 	}
 
 	function createObject () {
-		var name = 'asd', ObjWidth = '50', ObjHeight = '50';
-		d=document.createElement('div');
-		$(d).addClass("objects")
-			.attr('id', "obj_"+name+"-"+objno)
-			.css({
-				position: "absolute",
-				width: ObjWidth,
-				height: ObjHeight,
-				top: "0px",
-				left: "0px"
-			})
-			.html('')
-			.draggable({ containment: ".drawPane", 
-				start: function() {
-					$(this).addClass('overObj');
-				},
-				stop: function() {
-					$(this).removeClass('overObj');
-					}})
-			.appendTo(drawPane);
-			d=document.createElement('div');
-			$(d).addClass("obj")
-				.attr('id', "obj-"+name+"-"+(objno++))
-				.css({
-					width: "88%",
-					height: "55px",
-					margin: "auto",
-					"margin-top": "10px"
-				})
-				.html('<div style="border:1px solid;padding:5px;height:50px;width:94%;"><img src="" width="" height=""/><b>'+name+'</b></div>')
-				.appendTo(ObjList);
-				return false;
+		if(gameName == '')
+			return false;
+		currObj = "asd-"+objno;
+		openDialogBox([
+				['Error', 'div', 'style="color:red;"'],
+				['Name', 'text', currObj],
+				['Width', 'number'],
+				['Height', 'number'],
+				['createNewObject()', 'button', 'Create New Object']
+			], 'newObject');
+		return false;
 	}
 
-	function getPositionObj (obj) {
-		//obj.css("top")
-		//obj.css("left")
+	function createNewObject() {
+		$(".loader").fadeIn("fast", function(){
+			name = dialogInner.find('.newObjectName').val();
+			ObjWidth = parseFloat(dialogInner.find('.newObjectWidth').val());
+			ObjHeight = parseFloat(dialogInner.find('.newObjectHeight').val());
+			if (name == "asd-"+objno) {
+				objno++;
+			}
+			else{
+				if (objectsArr.indexOf(name) >=0 ) {
+					$(".loader").fadeOut("fast", function(){
+						dialogInner.find('.newObjectError').html("Use different name");
+						return;
+					});
+				}
+				else if(ObjWidth==NaN || ObjHeight==NaN || ObjWidth<0 || ObjWidth>newGameWidth || ObjHeight<0 || ObjHeight>newGameHeight){
+					$(".loader").fadeOut("fast",function(){
+						dialogInner.find('.newObjectError').html("Use valid w/h");
+						return;
+					});
+				}
+				currObj = name;
+			}
+			objectsArr.push(currObj);
+			ob = {"Name": currObj, "Width": ObjWidth, "Height": ObjHeight}
+			d=document.createElement('div');
+			$(d).addClass("objects")
+				.attr('id', "obj_"+currObj)
+				.css({
+					position: "absolute",
+					width: ObjWidth,
+					height: ObjHeight,
+					top: "0px",
+					left: "0px"
+				})
+				.html('')
+				.draggable({ containment: ".drawPane", 
+					start: function() {
+						$(this).addClass('overObj');
+						objClicked($(this).attr('id').split("_")[1]);
+					},
+					stop: function() {
+						$(this).removeClass('overObj');
+						}})
+				.appendTo(drawPane);
+				$(".objSelected").removeClass('objSelected');
+				d=document.createElement('div');
+				$(d).addClass("obj")
+					.attr('id', "Bobj_"+currObj)
+					.css({
+						width: "88%",
+						height: "55px",
+						margin: "auto",
+						"margin-top": "10px"
+					})
+					.html('<div style="border:1px solid;padding:5px;height:50px;width:94%;" class="objSelected"><img src="" width="" height=""/><b>'+currObj+'</b></div>')
+					.appendTo(ObjList);
+				refreshSettings(false);
+				refillSettings(ob);
+				dialogOuter.fadeOut('400');
+				dialogInner.html('');
+				Game.writeJSON(currObj+".json", JSON.stringify(ob));
+				$(".loader").fadeOut("fast");
+				return false;
+		});
+	}
+
+	function openDialogBox (HtmlArr, name) {
+		html = '<div><table><tbody>';
+		for (var i = 0; i < HtmlArr.length; i++) {
+			switch(HtmlArr[i][1]){
+				case 'div':
+					html += '<tr><td></td><td><div class="'+name+HtmlArr[i][0]+'" '+((HtmlArr[i].length >=3)?HtmlArr[i][2]:'')+'>'+((HtmlArr[i].length >=4)?HtmlArr[i][3]:'')+'</div></td></tr>';
+					break;
+				case 'text':
+					html += '<tr><td>' + HtmlArr[i][0] + ' : </td><td><input type="text" class="'+name+HtmlArr[i][0]+'" value="'+((HtmlArr[i].length >=3)?HtmlArr[i][2]:'')+'"/></td></tr>';
+					break;
+				case 'number':
+					html += '<tr><td>' + HtmlArr[i][0] + ' : </td><td><input type="number" class="'+name+HtmlArr[i][0]+'" value="'+((HtmlArr[i].length >=3)?HtmlArr[i][2]:'')+'"/></td></tr>';
+					break;
+				case 'button':
+					html += '<tr><td></td><td><input type="button" onclick="'+HtmlArr[i][0]+'" value="'+((HtmlArr[i].length >=3)?HtmlArr[i][2]:'')+'"/></td></tr>';
+					break;
+			}
+		};
+		html += '</tbody></table></div>';
+		dialogOuter.fadeIn("fast",function(){
+			dialogInner.html(html);
+			dialogInner.css({
+				position: "relative",
+				width: dialogInner.find('table').width(),
+				"top": (dialogOuter.innerHeight() - dialogInner.outerHeight())/2
+			});
+			$(dialogInner.find(' input')[0]).focus();
+		});
+	}
+
+	function enterToOb (el, ob, ind) {
+		type = el.attr('type');
+		if(type == 'checkbox'){
+			if (el.is(':checked')) {
+				if (ob[ind] === undefined)
+					ob[ind] = [el.val()];
+				else
+					ob[ind].push(el.val());
+			}
+		}
+		else if(type == "radio"){
+			ob[ind] = (el.is(':checked')?el.val():undefined);
+		}
+		else if(type == 'text' || type == 'hidden' || type == 'password')
+			ob[ind] = ($.isNumeric(el.val())?parseFloat(el.val()):el.val());
+		else if(type == 'number')
+			ob[ind] = parseFloat(el.val());
+		else if(type == 'file'){
+			if (el.val() != "") {
+				ob[ind] = el.val();
+			}
+		}
+	}
+
+	function saveProject () {
+		$(".loader").fadeIn("fast");
+		var ob = {};
+		$.each(propertiedForm.find(' input'), function(index, val) {
+			enterToOb($(val), ob, $(val).attr('class'));
+		});
+		$.each(varListT.find(' tr'), function(index, val) {
+			el = $(val).find('td');
+			enterToOb($(el[1]).find('input'), ob, "var_"+$(el[0]).find('input').val());
+		});
+		$.each(eventListT.find(' tr'), function(index, val) {
+			el = $(val).find('td');
+			enterToOb($(el[1]).find('input'), ob, "event_"+$(el[0]).find('input').val());
+		});
+		obj = $("#obj_"+currObj);
+		ob["pos_X"] = parseFloat(obj.css('left').split("px")[0]);
+		ob["pos_Y"] = parseFloat(obj.css('top').split("px")[0]);
+		Game.writeJSON(currObj+".json", JSON.stringify(ob));
+		changed = false;
+		$(".loader").fadeOut("fast");
+		return false;
 	}
 
 	$(".has-sub").hover(function() {
@@ -312,14 +547,22 @@
 			$(el).css('top', settingsPanel.height()*0.02*getClassArg($(el)));
 		});
 
-		$(document).on('click', '.objects', function(event) {
-			$(".objects").removeClass('overObj');
-			$(this).addClass('overObj');
+		$(document).on('click', '.dialogOuter', function(event) {
+			$(this).fadeOut('fast');
+			dialogInner.html('');
 		});
 
-		newGame();
-		
-		// drawPane.draggable({ stack: ".drawPane div", containment: ".drawPane" });
+		$(document).on('click', '.dialogInner', function(event) {
+			event.stopPropagation();
+		});
+
+		$(document).on('change', '.settingsPanel :input', function(event) {
+			changed = true;
+		});
+
+		$(document).on('click', '.obj>div', function(event) {
+			objClicked($(this).parent().attr('id').split("_")[1], $(this).parent());
+		});
 
 		$(".accordion>div>img").click(function(event) {
 			// For accordian
@@ -327,19 +570,21 @@
 			if (qwe.hasClass('ainvisible')) {
 				$(this).parent().siblings('div').children('div.avisible').animate({
 						width: '0px'
-					}, "fast",
-					function(){
-						$(this).removeClass('avisible').addClass('ainvisible');
-						qwe.removeClass('ainvisible').addClass('avisible').css({width: '0px'}).animate({width: '85px'});
+					}, { duration: 500,
+						queue: false,
+						complete: function(){
+							$(this).removeClass('avisible').addClass('ainvisible');
 
-						// To open Tab
-						var tab = par.attr("class").split(" ")[0];
-						tab=tab.split("_")[1];
-						asd = par.parent().parent().parent().find(">.tab");
-						asd.find(">.tab-content").css("display", "none");
-						asd.find(">."+tab).fadeIn();
+							// To open Tab
+							var tab = par.attr("class").split(" ")[0];
+							tab=tab.split("_")[1];
+							asd = par.parent().parent().parent().find(">.tab");
+							asd.find(">.tab-content").css("display", "none");
+							asd.find(">."+tab).fadeIn();
+						}
 					}
 				);
+				qwe.removeClass('ainvisible').addClass('avisible').css({width: '0px'}).animate({width: '85px'}, { duration: 500, queue: false});
 			}
 		});
 	});
@@ -348,9 +593,21 @@
 		$(".settingsPanel").children('div').each(function(index, el) {
 			$(el).css('top', settingsPanel.height()*0.02*getClassArg($(el)));
 		});
-		ht = (drawPanel.innerHeight()-drawPane.outerHeight())/2-4;
-		drawPane.css('top', (ht>=0)?ht:0);
+		if (drawPane.height()>0) {
+			ht = (drawPanel.innerHeight()-drawPane.outerHeight())/2-4;
+			drawPane.css('top', (ht>=0)?ht:0);
+		}
+		if (dialogOuter.css('display') != "none") {
+			dialogInner.css({
+				"top": (dialogOuter.innerHeight() - dialogInner.outerHeight())/2,
+				width: dialogInner.find('table').width()
+			});
+		}
 	});
+
+	$(window).load(function() {
+		$(".loader").fadeOut("fast");
+	})
 </script>
 </body>
 <html>
