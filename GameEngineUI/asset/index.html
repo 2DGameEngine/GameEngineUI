@@ -171,17 +171,17 @@
 					<div><img class="opn_tab-1" src="images/properties.png" width="17" alt="PROPERTIES">
 					<div style="width: 85px;" class="avisible">PROPERTIES</div></div>
 
-					<!-- 2nd header and pane -->
-					<div><img class="opn_tab-2" src="images/images.png" width="17" alt="IMAGES">
-					<div style="" class="ainvisible">IMAGES</div></div>
-
-					<!-- 3rd header and pane -->
-					<div><img class="opn_tab-3" src="images/animation.png" width="17" alt="ANIMATIONS">
-					<div style="" class="ainvisible">ANIMATIONS</div></div>
-
 					<!-- 4th header and pane -->
-					<div><img class="opn_tab-4" src="images/audioicon.png" width="17" alt="AUDIO">
+					<div><img class="opn_tab-2" src="images/audioicon.png" width="17" alt="AUDIO">
 					<div style="" class="ainvisible">AUDIO</div></div>
+
+					<!-- 1st header and pane -->
+					<div><img class="opn_tab-3" src="images/properties.png" width="17" alt="PROPERTIES">
+					<div style="width: 85px;" class="ainvisible">VARIABLES</div></div>
+
+					<!-- 2nd header and pane -->
+					<div><img class="opn_tab-4" src="images/images.png" width="17" alt="IMAGES">
+					<div style="" class="ainvisible">ACTIONS</div></div>
 
 				</div>
 				<form id="propertiedForm" class="tab" action="">
@@ -209,48 +209,36 @@
 						  </tr>
 						</table>
 					</div>
-					<div class="tab-2 tab-content" style="display: none;">
-						<table style="width:100%">
-							<tr>
-								<td>Upload an Image :<input type="file" class="img"></td>
-							</tr>
-						</table>
-					</div>
-					<div class="tab-3 tab-content" style="display:none;">
-						<table style="width:100%">
-							<tr>
-								<td>Upload an Animation file :<input type="file" class="anim"></td>
-							</tr>
-						</table>
-					</div>
-					<div class="tab-4 tab-content" style="display:none;">
+					<div class="tab-2 tab-content" style="display:none;">
 						<table style="width:100%">
 							<tr>
 								<td>Upload an audio file :<input type="file" class="audio"></td>
 							</tr>
 						</table>
 					</div>
+					<div class="tab-3 tab-content varListT">
+						<table style="width:100%" class="varList"></table>
+						<input type="button" onclick="addRow($(this))" class="varListB" value="Add New Variable">
+					</div>
+					<div class="tab-4 tab-content eventListT" style="display: none;">
+						<table style="width:100%" class="eventList"></table>
+						<input type="button" onclick="addRow($(this))" class="eventListB" value="Add New Event">
+					</div>
 				</form>
 			</div>
 			<div class="vareventList" style="background:white;height:47%;width:96%;margin:auto;overflow:scroll;position:relative;">
 				<div class="accordion">
-					<!-- 1st header and pane -->
+					
 					<div><img class="opn_tab-1" src="images/properties.png" width="17" alt="PROPERTIES">
-					<div style="width: 85px;" class="avisible">VARIABLES</div></div>
-
-					<!-- 2nd header and pane -->
-					<div><img class="opn_tab-2" src="images/images.png" width="17" alt="IMAGES">
-					<div style="" class="ainvisible">ACTIONS</div></div>
-
+					<div style="width: 85px;" class="avisible">MODALS</div></div>
 				</div>
 				<form id="varEventForm" class="tab" action="">
-					<div class="tab-1 tab-content varListT">
-						<table style="width:100%" class="varList"></table>
-						<input type="button" onclick="addRow($(this))" class="varListB" value="Add New Variable">
-					</div>
-					<div class="tab-2 tab-content eventListT" style="display: none;">
-						<table style="width:100%" class="eventList"></table>
-						<input type="button" onclick="addRow($(this))" class="eventListB" value="Add New Event">
+					<div class="tab-1 tab-content">
+						<table style="width:100%">
+							<tr>
+								<td>Upload an image file :<input type="file" class="audio"></td>
+							</tr>
+						</table>
 					</div>
 				</form>
 			</div>
@@ -269,7 +257,7 @@
 	function addRow (ele, name, value) {
 		if (typeof(name)==='undefined') name = '';
 		if (typeof(value)==='undefined') value = '';
-		ele.siblings('table').html('<tr><td><input type="text" name="name" placeholder="Name" value="'+name+'"></td><td><input type="text" name="value" placeholder="Value" value="'+value+'"></td><td><input type="button" value="X" onclick="deleteRow($(this))"></td></tr>')
+		ele.siblings('table').append('<tr><td><input type="text" name="name" placeholder="Name" value="'+name+'"></td><td><input type="text" name="value" placeholder="Value" value="'+value+'"></td><td><input type="button" value="X" onclick="deleteRow($(this))"></td></tr>')
 	}
 
 	function getClassArg (ele) {

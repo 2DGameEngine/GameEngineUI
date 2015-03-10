@@ -59,7 +59,7 @@ public:
 
     UpdateWindow(hwnd_);
 
-    SetTimer (hwnd_, 0, 10, NULL );
+    SetTimer (hwnd_, 0, 0, NULL );
 
     g_active_views_.push_back(this);
   }

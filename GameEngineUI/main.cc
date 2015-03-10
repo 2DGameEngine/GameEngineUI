@@ -41,9 +41,7 @@ class GameEngine : public Application::Listener {
   virtual void OnLoaded() {
     view_ = View::Create(500, 300);
     WebView* web_view = view_->web_view();
-
     BindMethods(web_view);
-
     WebURL url(WSLit("file:///./asset/index.html"));
     web_view->LoadURL(url);
   }
