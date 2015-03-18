@@ -9,7 +9,8 @@
 
 # Build results
 [Dd]ebug/GameEngineUI.*
-GameEngineUI/[Dd]ebug/
++/[Dd]ebug/
+
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/

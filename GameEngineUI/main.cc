@@ -21,9 +21,9 @@ class GameEngine : public Application::Listener {
     : app_(Application::Create()),
       view_(0) {
     app_->set_listener(this);
-	workspace = "C\:\\Users\\akc\\Documents\\Visual\ Studio\ 2010\\Projects\\GameEngineUI\\Games\\";
+	workspace = "\.\.\\Games\\";
 	prName = "";
-	srcPath = "C\:\\Users\\akc\\Documents\\Visual\ Studio\ 2010\\Projects\\GameEngineUI\\game_backend";
+	srcPath = "\.\.\\game_backend";
   }
 
   virtual ~GameEngine() {
@@ -41,7 +41,9 @@ class GameEngine : public Application::Listener {
   virtual void OnLoaded() {
     view_ = View::Create(500, 300);
     WebView* web_view = view_->web_view();
+
     BindMethods(web_view);
+
     WebURL url(WSLit("file:///./asset/index.html"));
     web_view->LoadURL(url);
   }
@@ -90,20 +92,14 @@ class GameEngine : public Application::Listener {
 
   JSValue readJSON(WebView* caller,
                   const JSArray& args) {
-	std::string filename = workspace;
-	filename += prName;
-	filename += "\\json\\";
-	filename += ToString(args[0].ToString());
+	std::string filename = workspace + prName + "\\json\\" + ToString(args[1].ToString()) + "\\" + ToString(args[0].ToString());
 	std::cout<<"Reading "<<filename<<"\n";
 	return JSValue(FileManager::Instance()->readJSON(filename.c_str()));
   }
 
   JSValue writeJSON(WebView* caller,
                   const JSArray& args) {
-	std::string filename = workspace;
-	filename += prName;
-	filename += "\\json\\";
-	filename += ToString(args[0].ToString());
+	std::string filename = workspace + prName + "\\json\\" + ToString(args[2].ToString()) + "\\" + ToString(args[0].ToString());
 	std::cout<<"Reading "<<filename<<"\n";
 	std::string jsonStr = ToString(args[1].ToString());
 	return JSValue(FileManager::Instance()->writeJSON(filename.c_str(), jsonStr.c_str()));
@@ -111,8 +107,7 @@ class GameEngine : public Application::Listener {
 
   JSValue setNewGame(WebView* caller,
                   const JSArray& args) {
-	std::string gameName = workspace;
-	gameName += ToString(args[0].ToString());
+	std::string gameName = workspace + ToString(args[0].ToString());
 	std::string jsonStr = ToString(args[1].ToString());
 	if(FileManager::Instance()->copyFolder(srcPath.c_str(), gameName.c_str()) && FileManager::Instance()->renameGame(gameName.c_str(), "game_backend",ToString(args[0].ToString()).c_str())){
 		gameName += "\\Game.json";

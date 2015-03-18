@@ -76,12 +76,9 @@ bool FileManager::renameGame(const char* source, const char* oldName, const char
 					tmpStr += ".sln";
 
 					if(str == tmpStr){
-						file = sfldr;
-						file += ent->d_name;
+						file = sfldr + ent->d_name;
 						std::ifstream in(file);
-						file = sfldr;
-						file += prName;
-						file += ".sln";
+						file = sfldr + prName + ".sln";
 						std::ofstream out(file);
 						std::string wordToReplace(oldName), wordToReplaceWith(prName);
 						if (!in || !out){
@@ -99,28 +96,23 @@ bool FileManager::renameGame(const char* source, const char* oldName, const char
 							}
 							out<<line<<'\n';
 						}
-						file = sfldr;
-						file += ent->d_name;
+						file = sfldr + ent->d_name;
 						in.close();
 						out.close();
 						std::cout<<"Remove = "<<file<<"\n";
 						if(!removeFile(file.c_str())){
 							return false;
 						}
-						file = sfldr;
-						file += prName;
-						file += ".sln";
+						file = sfldr + prName + ".sln";
 						sfull_path = file;
 						std::cout<<"Rsfull = "<<sfull_path<<"\n";
 					}
 					else{
 						size_t len = strlen(oldName);
-						file = sfldr;
-						file += ent->d_name;
+						file = sfldr + ent->d_name;
 						str = ent->d_name;
 						str.replace(found, len, prName);
-						nFile = sfldr;
-						nFile += str;
+						nFile = sfldr + str;
 						if(!renameDirorFile(file.c_str(), nFile.c_str())){
 							return false;						
 						}
